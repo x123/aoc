@@ -39,9 +39,9 @@ func runDay(cmd *cobra.Command, args []string) {
 func loadInput() string {
 	var path string
 	if preview {
-		path = fmt.Sprintf("./%d/preview.txt", day)
+		path = fmt.Sprintf("./inputs/%d/preview.txt", day)
 	} else {
-		path = fmt.Sprintf("./%d/input.txt", day)
+		path = fmt.Sprintf("./inputs/%d/input.txt", day)
 	}
 	content, err := os.ReadFile(path)
 	if err != nil {
