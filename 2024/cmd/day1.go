@@ -65,5 +65,21 @@ func day1_1(content string) {
 
 func day1_2(content string) {
 	fmt.Printf("day:%d,part:%d\n", day, part)
-	fmt.Printf("content:\n%s\n", content)
+
+	var totalSimilarity int
+	leftList, rightList := buildSortedLists(content)
+
+	for _, left := range leftList {
+		count := 0
+		for _, right := range rightList {
+			if left == right {
+				count += 1
+			}
+		}
+		similarity := left * count
+		totalSimilarity += similarity
+		fmt.Printf("left:%d is in rightList %d times for similarity score of %d\n", left, count, similarity)
+	}
+
+	fmt.Printf("totalSimilarity:%d\n", totalSimilarity)
 }
