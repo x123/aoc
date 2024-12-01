@@ -18,13 +18,9 @@ func absDiffInt(x, y int) int {
 	return x - y
 }
 
-func day1_1(content string) {
-	fmt.Printf("day:%d,part:%d\n", day, part)
-
+func buildSortedLists(content string) ([]int, []int) {
 	var leftList []int
 	var rightList []int
-
-	var totalDiff int
 
 	for _, line := range strings.Split(content, "\n") {
 		if line != "" {
@@ -48,6 +44,16 @@ func day1_1(content string) {
 	sort.Ints(rightList)
 	fmt.Printf("sorted leftList:%v\n", leftList)
 	fmt.Printf("sorted rightList:%v\n", rightList)
+
+	return leftList, rightList
+}
+
+func day1_1(content string) {
+	fmt.Printf("day:%d,part:%d\n", day, part)
+
+	var totalDiff int
+
+	leftList, rightList := buildSortedLists(content)
 
 	for i := range leftList {
 		diff := absDiffInt(leftList[i], rightList[i])
