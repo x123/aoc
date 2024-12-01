@@ -60,8 +60,32 @@ func day3_1(content string) {
 }
 
 func day3_2(content string) {
+	fmt.Printf("day:%d part:%d\n", day, part)
+	var totalPriority int
+
+	var counter int
+	var loopCounter int
+	things := make(map[int][][]byte)
+
 	for _, line := range strings.Split(content, "\n") {
 		if line != "" {
+			fmt.Println(line)
+			things[loopCounter] = append(things[loopCounter], []byte(line))
+			if counter < 2 {
+				counter += 1
+			} else {
+				loopCounter += 1
+				counter = 0
+			}
 		}
 	}
+	for _, v := range things {
+		fmt.Printf("v:%c\n", v)
+		intersect1 := hashGeneric(v[0], v[1])
+		intersect2 := hashGeneric(intersect1, v[2])
+		priority := calcPriority(intersect2[0])
+		totalPriority += priority
+		fmt.Printf("intersect:%c,priority:%d\n", intersect2[0], priority)
+	}
+	fmt.Printf("totalPriority:%d\n", totalPriority)
 }
