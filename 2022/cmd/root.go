@@ -39,6 +39,10 @@ func runDay(cmd *cobra.Command, args []string) {
 		day3_1(loadInput())
 	case [2]uint{3, 2}:
 		day3_2(loadInput())
+	case [2]uint{4, 1}:
+		day4_1(loadInput())
+	case [2]uint{4, 2}:
+		day4_2(loadInput())
 	default:
 		cmd.Help()
 	}
