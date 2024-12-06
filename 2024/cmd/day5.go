@@ -126,4 +126,79 @@ func day5_1(content string) {
 
 func day5_2(content string) {
 	fmt.Printf("day:%d,part:%d\n", day, part)
+	var totalMiddleSum int
+
+	rules, pages := day5LoadRulesPages(content)
+	fmt.Printf("rules:%v\n", rules)
+	fmt.Printf("pages:%v\n", pages)
+
+	for _, pageSet := range pages {
+		valid := true
+		for _, rulePair := range rules {
+			left := rulePair[0]
+			right := rulePair[1]
+			intersect := day5HashGeneric(pageSet, []int{left, right})
+			if len(intersect) == 2 {
+				leftPos := day5FindPos(pageSet, left)
+				rightPos := day5FindPos(pageSet, right)
+				if leftPos == -1 || rightPos == -1 {
+					log.Fatal("day5FindPos got -1")
+				}
+				if leftPos > rightPos {
+					valid = false
+				}
+			}
+		}
+		if !valid {
+			fmt.Printf("invalid pageset:%v\n", pageSet)
+			var applicableRules [][2]int
+			for _, rulePair := range rules {
+				left := rulePair[0]
+				right := rulePair[1]
+				intersect := day5HashGeneric(pageSet, []int{left, right})
+				if len(intersect) == 2 {
+					applicableRules = append(applicableRules, [2]int{left, right})
+					leftPos := day5FindPos(pageSet, left)
+					rightPos := day5FindPos(pageSet, right)
+					if leftPos == -1 || rightPos == -1 {
+						log.Fatal("day5FindPos got -1")
+					}
+					if leftPos > rightPos {
+						fmt.Printf("pageSet.left:%d,pageSet.right:%d,not respecting rulePair:%d\n", pageSet[leftPos], pageSet[rightPos], rulePair)
+						valid = false
+					}
+				}
+			}
+
+			// recursively fix the pageset until it is valid based on the applicable rules
+			changed := true
+			for changed {
+				changed = fixPageSet(pageSet, applicableRules)
+			}
+
+			fmt.Printf("fixed pageset:%v\n", pageSet)
+			fmt.Printf("applicableRules:%d\n", applicableRules)
+			middle := day5FindMiddle(pageSet)
+			fmt.Printf("middle:%v\n", middle)
+			totalMiddleSum += middle
+		}
+	}
+	fmt.Printf("totalMiddleSum:%d\n", totalMiddleSum)
+}
+
+// reorder pageSet on the first match by swapping, designed to be used recursively
+func fixPageSet(pageSet []int, applicableRules [][2]int) bool {
+	for _, rulePair := range applicableRules {
+		left := rulePair[0]
+		right := rulePair[1]
+		leftPos := day5FindPos(pageSet, left)
+		rightPos := day5FindPos(pageSet, right)
+		if leftPos > rightPos {
+			var tmp = slices.Clone(pageSet)
+			pageSet[rightPos] = tmp[leftPos]
+			pageSet[leftPos] = tmp[rightPos]
+			return true
+		}
+	}
+	return false
 }
